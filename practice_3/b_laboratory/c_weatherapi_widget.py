@@ -108,14 +108,10 @@ class WeatherWidget(QtWidgets.QWidget):
         Метод переключает блокировку полей ввода
         :return: None
         """
-        if self.ui.lineEditLat.isEnabled():
-            self.ui.lineEditLat.setEnabled(False)
-            self.ui.lineEditLon.setEnabled(False)
-            self.ui.lineEditDelay.setEnabled(False)
-        else:
-            self.ui.lineEditLat.setEnabled(True)
-            self.ui.lineEditLon.setEnabled(True)
-            self.ui.lineEditDelay.setEnabled(True)
+        switcher = False if self.ui.lineEditLat.isEnabled() else True
+        self.ui.lineEditLat.setEnabled(switcher)
+        self.ui.lineEditLon.setEnabled(switcher)
+        self.ui.lineEditDelay.setEnabled(switcher)
 
 
 if __name__ == "__main__":
