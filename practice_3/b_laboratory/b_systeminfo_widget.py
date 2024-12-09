@@ -32,11 +32,14 @@ class SystemInfoWidget(QtWidgets.QWidget):
         self.thread.start()
 
     def __initSignals(self):
-        self.thread.systemInfoProgress.connect(lambda data: self.ui.lineEditCPU.setText(str(data[0])))
-        self.thread.systemInfoProgress.connect(lambda data: self.ui.progressBarCPU.setValue(data[0]))
-        self.thread.systemInfoProgress.connect(lambda data: self.ui.lineEditRAM.setText(str(data[1])))
-        self.thread.systemInfoProgress.connect(lambda data: self.ui.progressBarRAM.setValue(data[1]))
+        self.thread.systemInfoProgress.connect(self.showSystemInfo)
         self.ui.pushButtonDelay.clicked.connect(self.onPushButtonDelay)
+
+    def showSystemInfo(self, sys_info):
+        self.ui.lineEditCPU.setText(str(sys_info[0]))
+        self.ui.progressBarCPU.setValue(sys_info[0])
+        self.ui.lineEditRAM.setText(str(sys_info[1]))
+        self.ui.progressBarRAM.setValue(sys_info[1])
 
     def onPushButtonDelay(self):
         delay = float(self.ui.lineEditDelay.text().replace(',', '.'))
