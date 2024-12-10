@@ -32,8 +32,6 @@ class WeatherWidget(QtWidgets.QWidget):
 
     def __handleThread(self, status):
         self.ui.pushButtonHandle.setText("Стоп" if status else "Старт")
-        lat = None
-        lon = None
 
         if not status:
             self.thread.status = False
@@ -77,8 +75,7 @@ class WeatherWidget(QtWidgets.QWidget):
         """
         if self.ui.lineEditLat.text() and -90 <= float(self.ui.lineEditLat.text().replace(',', '.')) <= 90:
             return True
-        else:
-            return False
+        return False
 
     def currentLonCheck(self) -> bool:
         """
@@ -87,8 +84,7 @@ class WeatherWidget(QtWidgets.QWidget):
         """
         if self.ui.lineEditLon.text() and -180 <= float(self.ui.lineEditLon.text().replace(',', '.')) <= 180:
             return True
-        else:
-            return False
+        return False
 
     def lineEditsSwitch(self) -> None:
         """

@@ -1,15 +1,11 @@
 """
-Модуль в котором содержаться потоки Qt
+Модуль в котором содержатся потоки Qt
 """
 
-import time
 import traceback
-from winreg import QueryValue
-
 import psutil
 import requests
 from PySide6 import QtCore
-from stua.os import system
 
 
 class SystemInfo(QtCore.QThread):
@@ -19,15 +15,19 @@ class SystemInfo(QtCore.QThread):
         super().__init__(parent)
         self.delay = None
 
+    def emitSystemInfo(self, delay):
+        cpu_value = psutil.cpu_percent(interval=delay)  # sleep заменен интервалом, чтобы значение не сбрасывалось
+        # в ноль при каждом запуске потока
+        ram_value = psutil.virtual_memory().percent
+        self.systemInfoProgress.emit([cpu_value, ram_value])
+
     def run(self) -> None:
         if self.delay is None:
             self.delay = 1
+            self.emitSystemInfo(0.1)  # Небольшая задержка для правильного значения при первом запуске
 
         while True:
-            cpu_value = psutil.cpu_percent()
-            ram_value = psutil.virtual_memory().percent
-            self.systemInfoProgress.emit([cpu_value, ram_value])
-            time.sleep(self.delay)
+            self.emitSystemInfo(self.delay)
 
 
 class WeatherHandler(QtCore.QThread):

@@ -44,7 +44,7 @@ class SystemInfoWidget(QtWidgets.QWidget):
     def onPushButtonDelay(self):
         delay = float(self.ui.lineEditDelay.text().replace(',', '.'))
         self.thread.delay = delay
-        self.ui.labelCurrentDelay.setText(f"Текущая задержка: {str(delay)} с")
+        self.ui.labelCurrentDelay.setText(f"Текущая задержка: {delay} с")
         self.thread.terminate()
         self.thread.start()
 
