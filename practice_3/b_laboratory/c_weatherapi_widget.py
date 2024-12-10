@@ -36,7 +36,7 @@ class WeatherWidget(QtWidgets.QWidget):
         lon = None
 
         if not status:
-            self.thread.setStatus(False)
+            self.thread.status = False
             self.ui.textBrowserWeather.append("Опрос сервера завершён.")
             self.thread.terminate()  # Уничтожаем для предотвращения вылета программы из-за внедрения данных в
             # текущий поток
@@ -50,13 +50,13 @@ class WeatherWidget(QtWidgets.QWidget):
                 else:
                     delay = 10
                 self.thread = WeatherHandler(lat, lon)
-                self.thread.setDelay(delay)
+                self.thread.delay = delay
 
                 self.thread.started.connect(lambda: self.lineEditsSwitch())
 
                 self.thread.lat.connect(lambda: self.ui.textBrowserWeather.setText(f"Время: {time.ctime()}"))
                 self.thread.lat.connect(
-                    lambda: self.ui.textBrowserWeather.append(f"Задержка обновления: {self.thread.getDelay()} с"))
+                    lambda: self.ui.textBrowserWeather.append(f"Задержка обновления: {self.thread.delay} с"))
                 self.thread.lat.connect(lambda data: self.ui.textBrowserWeather.append(f"Широта: {data}"))
                 self.thread.lon.connect(lambda data: self.ui.textBrowserWeather.append(f"Долгота: {data}"))
                 self.thread.time.connect(lambda data: self.ui.textBrowserWeather.append(f"Время на сервере: {data}"))
