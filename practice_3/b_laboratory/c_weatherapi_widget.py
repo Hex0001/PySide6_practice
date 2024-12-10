@@ -53,20 +53,7 @@ class WeatherWidget(QtWidgets.QWidget):
                 self.thread.delay = delay
 
                 self.thread.started.connect(lambda: self.lineEditsSwitch())
-
-                self.thread.lat.connect(lambda: self.ui.textBrowserWeather.setText(f"Время: {time.ctime()}"))
-                self.thread.lat.connect(
-                    lambda: self.ui.textBrowserWeather.append(f"Задержка обновления: {self.thread.delay} с"))
-                self.thread.lat.connect(lambda data: self.ui.textBrowserWeather.append(f"Широта: {data}"))
-                self.thread.lon.connect(lambda data: self.ui.textBrowserWeather.append(f"Долгота: {data}"))
-                self.thread.time.connect(lambda data: self.ui.textBrowserWeather.append(f"Время на сервере: {data}"))
-                self.thread.interval.connect(
-                    lambda data: self.ui.textBrowserWeather.append(f"Задержка на сервере: {data}"))
-                self.thread.temperature.connect(lambda data: self.ui.textBrowserWeather.append(f"Температура: {data}"))
-                self.thread.windspeed.connect(lambda data: self.ui.textBrowserWeather.append(f"Скорость ветра: {data}"))
-                self.thread.winddirection.connect(
-                    lambda data: self.ui.textBrowserWeather.append(f"Направление ветра: {data}"))
-                self.thread.is_day.connect(lambda data: self.ui.textBrowserWeather.append("День" if data else "Ночь"))
+                self.thread.weather_info.connect(self.showWeatherInfo)
                 self.thread.start()
             else:
                 self.ui.textBrowserWeather.setText("Неверные координаты.\nШирота должна быть в интервале: [-90, 90]\n"
@@ -112,6 +99,22 @@ class WeatherWidget(QtWidgets.QWidget):
         self.ui.lineEditLat.setEnabled(switcher)
         self.ui.lineEditLon.setEnabled(switcher)
         self.ui.lineEditDelay.setEnabled(switcher)
+
+    def showWeatherInfo(self, data):
+        self.ui.textBrowserWeather.setText(f"Время: {time.ctime()}")
+        self.ui.textBrowserWeather.append(f"Задержка обновления: {self.thread.delay} с")
+        self.ui.textBrowserWeather.append(f"Широта: {round(data["latitude"], 2)}")
+        self.ui.textBrowserWeather.append(f"Долгота: {round(data["longitude"], 2)}")
+        self.ui.textBrowserWeather.append(f"Время на сервере: {data["current_weather"]["time"]}")
+        self.ui.textBrowserWeather.append(f"Задержка на сервере: {data["current_weather"]["interval"]} "
+                                          f"{data["current_weather_units"]["interval"]}")
+        self.ui.textBrowserWeather.append(f"Температура: {round(data["current_weather"]["temperature"], 2)} "
+                                          f"{data["current_weather_units"]["temperature"]}")
+        self.ui.textBrowserWeather.append(f"Скорость ветра: {data["current_weather"]["windspeed"]} "
+                                          f"{data["current_weather_units"]["windspeed"]}")
+        self.ui.textBrowserWeather.append(f"Направление ветра: {data["current_weather"]["winddirection"]} "
+                                          f"{data["current_weather_units"]["winddirection"]}")
+        self.ui.textBrowserWeather.append("День" if data["current_weather"]["is_day"] else "Ночь")
 
 
 if __name__ == "__main__":

@@ -31,14 +31,7 @@ class SystemInfo(QtCore.QThread):
 
 
 class WeatherHandler(QtCore.QThread):
-    lat = QtCore.Signal(str)
-    lon = QtCore.Signal(str)
-    time = QtCore.Signal(str)
-    interval = QtCore.Signal(str)
-    temperature = QtCore.Signal(str)
-    windspeed = QtCore.Signal(str)
-    winddirection = QtCore.Signal(str)
-    is_day = QtCore.Signal(bool)
+    weather_info = QtCore.Signal(dict)
 
     def __init__(self, lat, lon, parent=None):
         super().__init__(parent)
@@ -69,14 +62,7 @@ class WeatherHandler(QtCore.QThread):
             while self.__status:
                 response = requests.get(self.__api_url)
                 data = response.json()
-                self.lat.emit(f"{round(data["latitude"], 2)}")
-                self.lon.emit(f"{round(data["longitude"], 2)}")
-                self.time.emit(f"{data["current_weather"]["time"]}")
-                self.interval.emit(f"{data["current_weather"]["interval"]} {data["current_weather_units"]["interval"]}")
-                self.temperature.emit(f"{round(data["current_weather"]["temperature"], 2)} {data["current_weather_units"]["temperature"]}")
-                self.windspeed.emit(f"{data["current_weather"]["windspeed"]} {data["current_weather_units"]["windspeed"]}")
-                self.winddirection.emit(f"{data["current_weather"]["winddirection"]} {data["current_weather_units"]["winddirection"]}")
-                self.is_day.emit(data["current_weather"]["is_day"])
+                self.weather_info.emit(data)
                 self.sleep(self.__delay)
         except Exception:
             traceback.print_exc()
