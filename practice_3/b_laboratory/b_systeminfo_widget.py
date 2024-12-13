@@ -42,11 +42,15 @@ class SystemInfoWidget(QtWidgets.QWidget):
         self.ui.progressBarRAM.setValue(sys_info[1])
 
     def onPushButtonDelay(self):
-        delay = float(self.ui.lineEditDelay.text().replace(',', '.'))
-        self.thread.delay = delay
-        self.ui.labelCurrentDelay.setText(f"Текущая задержка: {delay} с")
-        self.thread.terminate()
-        self.thread.start()
+        try:
+            delay = float(self.ui.lineEditDelay.text().replace(',', '.'))
+        except ValueError:
+            print("Ошибка. Необходимо ввести значение задержки.")
+        else:
+            self.thread.delay = delay
+            self.ui.labelCurrentDelay.setText(f"Текущая задержка: {delay} с")
+            self.thread.terminate()
+            self.thread.start()
 
 
 if __name__ == "__main__":

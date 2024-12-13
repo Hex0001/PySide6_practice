@@ -43,12 +43,9 @@ class WeatherWidget(QtWidgets.QWidget):
             if self.currentLatCheck() and self.currentLonCheck():
                 lat = float(self.ui.lineEditLat.text().replace(',', '.'))
                 lon = float(self.ui.lineEditLon.text().replace(',', '.'))
-                if self.ui.lineEditDelay.text():
-                    delay = float(self.ui.lineEditDelay.text().replace(',', '.'))
-                else:
-                    delay = 10
                 self.thread = WeatherHandler(lat, lon)
-                self.thread.delay = delay
+                if self.ui.lineEditDelay.text():
+                    self.thread.delay = float(self.ui.lineEditDelay.text().replace(',', '.'))
 
                 self.thread.started.connect(lambda: self.lineEditsSwitch())
                 self.thread.weather_info.connect(self.showWeatherInfo)

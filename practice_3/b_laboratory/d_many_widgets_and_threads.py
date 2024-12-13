@@ -2,7 +2,6 @@
 Реализовать окно, которое будет объединять в себе сразу два предыдущих виджета
 """
 from PySide6 import QtWidgets
-from PySide6.QtCore import QFlag
 
 from b_systeminfo_widget import SystemInfoWidget
 from c_weatherapi_widget import WeatherWidget
