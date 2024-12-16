@@ -41,13 +41,19 @@ class YandexDictionaryWindow(QtWidgets.QMainWindow):
         self.ui.comboBoxDefSelect.clear()
         self.ui.comboBoxDefSelect.addItems([str(i + 1) for i in range(self.__definitions.getLength())])
 
-        if self.ui.comboBoxDefSelect.currentText():
+        self.setPlainTextEdits(self.ui.comboBoxDefSelect.currentText())
+
+    def onComboBoxDefChanged(self):
+        self.setPlainTextEdits(self.ui.comboBoxDefSelect.currentText())
+
+    def setPlainTextEdits(self, def_select=None):
+        if def_select:
             self.ui.plainTextEditDef.setPlainText(
                 self.__definitions.getDefText(int(self.ui.comboBoxDefSelect.currentText()) - 1))
             self.ui.plainTextEditSyn.setPlainText(
                 self.__definitions.getSynText(int(self.ui.comboBoxDefSelect.currentText()) - 1))
             self.ui.plainTextEditSyn.appendPlainText(
-                f"Возможные варианты перевода:\n{self.__definitions.getMeanText(int(self.ui.comboBoxDefSelect.currentText()) - 1)}")
+                self.__definitions.getMeanText(int(self.ui.comboBoxDefSelect.currentText()) - 1))
             self.ui.plainTextEditTranslate.setPlainText(
                 self.__definitions.getTrText(int(self.ui.comboBoxDefSelect.currentText()) - 1))
             self.ui.plainTextEditTranslate.appendPlainText(
@@ -56,19 +62,6 @@ class YandexDictionaryWindow(QtWidgets.QMainWindow):
             self.ui.plainTextEditDef.setPlainText("Слово не найдено")
             self.ui.plainTextEditSyn.clear()
             self.ui.plainTextEditTranslate.clear()
-
-    def onComboBoxDefChanged(self):
-        if self.ui.comboBoxDefSelect.currentText():
-            self.ui.plainTextEditDef.setPlainText(
-                self.__definitions.getDefText(int(self.ui.comboBoxDefSelect.currentText()) - 1))
-            self.ui.plainTextEditSyn.setPlainText(
-                self.__definitions.getSynText(int(self.ui.comboBoxDefSelect.currentText()) - 1))
-            self.ui.plainTextEditSyn.appendPlainText(
-                f"Возможные варианты перевода:\n{self.__definitions.getMeanText(int(self.ui.comboBoxDefSelect.currentText()) - 1)}")
-            self.ui.plainTextEditTranslate.setPlainText(
-                self.__definitions.getTrText(int(self.ui.comboBoxDefSelect.currentText()) - 1))
-            self.ui.plainTextEditTranslate.appendPlainText(
-                self.__definitions.getExText(int(self.ui.comboBoxDefSelect.currentText()) - 1))
 
 
 class Definitions:
